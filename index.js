@@ -41,8 +41,8 @@ function verifyJWT(req, res, next) {
 }
 
 async function run() {
-	const furnitureCollections = client.db('furnitureCollection').collection('furnitures')
 	const categoriesCollections = client.db('furnitureCollection').collection('categories')
+	const furnitureCollections = client.db('furnitureCollection').collection('furnitures ')
 	const usersCollections = client.db('furnitureCollection').collection('users')
 	const ordersCollections = client.db('furnitureCollection').collection('orders')
 	const reportsCollections = client.db('furnitureCollection').collection('reports')
@@ -255,6 +255,7 @@ async function run() {
 		})
 		app.get('/furnitures/:id', async (req, res) => {
 			const { id } = req.params
+			console.log(id);
 			const query = { _id: ObjectId(id) }
 			const result = await furnitureCollections.findOne(query)
 			res.send(result)
@@ -270,10 +271,15 @@ async function run() {
 			const filter = furnitures.filter(furniture => furniture.Status === 'Approved')
 			res.send(filter)
 		})
+		app.get('/data', async (req, res) => {
+			const data = await furnitureCollections.find({}).toArray()
+			res.send(data)
+		})
 		app.get('/categoriesProducts/:id', async (req, res) => {
 			const { id } = req.params
 			const query = { categoryName: id }
 			const result = await furnitureCollections.find(query).toArray()
+			console.log(result);
 			res.send(result)
 		})
 		app.get('/orders/:email', verifyJWT, async (req, res) => {
